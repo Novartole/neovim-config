@@ -72,6 +72,8 @@ return {
 	init = function()
 		local open_floating_preview = vim.lsp.util.open_floating_preview
 		vim.lsp.util.open_floating_preview = function(contents, syntax, _opts)
+			-- force focusing in certain cases
+			--
 			if _opts and vim.tbl_contains({ "rustc-explain-error", "ra-render-diagnostic" }, _opts.focus_id) then
 				local bufnr, winnr = open_floating_preview(contents, syntax, _opts)
 

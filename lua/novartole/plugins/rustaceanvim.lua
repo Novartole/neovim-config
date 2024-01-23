@@ -37,7 +37,10 @@ return {
 				require("lsp-inlayhints").on_attach(client, bufnr) -- turn on inlayhints
 
 				local keymap = vim.keymap
-				local opts = { buffer = bufnr }
+				local opts = {
+					buffer = bufnr,
+					silent = true,
+				}
 
 				keymap.set(
 					"n",

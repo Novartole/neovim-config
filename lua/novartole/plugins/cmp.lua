@@ -88,19 +88,35 @@ return {
 			}),
 		})
 
+		cmp.setup.filetype("rust", {
+			sources = cmp.config.sources({
+				{ name = "luasnip" },
+				{ name = "nvim_lsp" },
+				{ name = "async_path" },
+				{ name = "buffer" },
+				{
+					name = "buffer-lines",
+					keyword_length = 4,
+				},
+			}),
+		})
+
 		vim.api.nvim_create_autocmd("BufRead", {
 			group = vim.api.nvim_create_augroup("CmpSourceCargo", { clear = true }),
 			pattern = "Cargo.toml",
 			callback = function()
 				cmp.setup.buffer({
 					sources = {
+						{ name = "crates", group_index = 1 },
+						{ name = "async_path", group_index = 1 },
+						{ name = "buffer", group_index = 1 },
 						{
-							{ name = "nvim_lsp_signature_help" },
-							{ name = "crates" },
-							{ name = "async_path" },
-							{ name = "buffer" },
-							{ name = "buffer-lines" },
+							name = "buffer-lines",
+							group_index = 1,
+							keyword_length = 4,
 						},
+
+						{ name = "nvim_lsp", group_index = 2 },
 					},
 				})
 			end,

@@ -4,21 +4,46 @@ return {
 	opts = function()
 		local lazy_status = require("lazy.status")
 
+		local MAX_BRANCH_NAME_LEN = 10
+		local branch_name = ""
+
+		local ft_is_not_nvimtree = function()
+			return "NvimTree" ~= vim.bo.filetype
+		end
+
 		return {
 			options = {
 				theme = "catppuccin",
 			},
 			sections = {
 				lualine_a = {
-					"mode",
+					{
+						"mode",
+						cond = function()
+							return ft_is_not_nvimtree()
+								or branch_name == ""
+								or string.len(branch_name) > MAX_BRANCH_NAME_LEN
+						end,
+					},
 				},
 				lualine_b = {
-					"branch",
+					{
+						"branch",
+						fmt = function(content, _)
+							branch_name = content
+
+							return content
+						end,
+						cond = function()
+							return ft_is_not_nvimtree() or string.len(branch_name) <= MAX_BRANCH_NAME_LEN
+						end,
+					},
 				},
 				lualine_c = {
 					{
 						"filename",
 						path = 1,
+						cond = ft_is_not_nvimtree,
 					},
 				},
 				lualine_x = {
@@ -37,12 +62,23 @@ return {
 					},
 					{
 						lazy_status.updates,
-						cond = lazy_status.has_updates,
+						cond = function()
+							return ft_is_not_nvimtree() and lazy_status.has_updates()
+						end,
 						color = { fg = "#ff9e64" },
 					},
-					"filesize",
-					"encoding",
-					"filetype",
+					{
+						"filesize",
+						cond = ft_is_not_nvimtree,
+					},
+					{
+						"encoding",
+						cond = ft_is_not_nvimtree,
+					},
+					{
+						"filetype",
+						cond = ft_is_not_nvimtree,
+					},
 				},
 				lualine_y = {
 					"selectioncount",

@@ -53,10 +53,13 @@ return {
 			mapping = cmp.mapping.preset.cmdline(),
 			sources = {
 				{ name = "buffer" },
-				{ name = "buffer-lines" },
 				{
 					name = "cmdline_history",
 					keyword_length = 3,
+				},
+				{
+					name = "buffer-lines",
+					keyword_length = 4,
 				},
 			},
 		})
@@ -71,7 +74,7 @@ return {
 				},
 				{
 					name = "cmdline_history",
-					keyword_length = 3,
+					keyword_length = 4,
 				},
 			}),
 		})
@@ -107,16 +110,27 @@ return {
 			callback = function()
 				cmp.setup.buffer({
 					sources = {
-						{ name = "crates", group_index = 1 },
-						{ name = "async_path", group_index = 1 },
-						{ name = "buffer", group_index = 1 },
+						{
+							name = "crates",
+							group_index = 1,
+						},
+						{
+							name = "async_path",
+							group_index = 1,
+						},
+						{
+							name = "buffer",
+							group_index = 1,
+						},
 						{
 							name = "buffer-lines",
 							group_index = 1,
 							keyword_length = 4,
 						},
-
-						{ name = "nvim_lsp", group_index = 2 },
+						{
+							name = "nvim_lsp",
+							group_index = 2,
+						},
 					},
 				})
 			end,

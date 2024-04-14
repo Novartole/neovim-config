@@ -9,6 +9,31 @@ return {
 	},
 	opts = {
 		servers = {
+			["clangd"] = {},
+			["tsserver"] = {
+				settings = {
+					typescript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "all",
+							includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = true,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+							includeInlayEnumMemberValueHints = true,
+						},
+					},
+				},
+				on_attach = function(client, bufnr)
+					require("lsp-inlayhints").on_attach(client, bufnr)
+				end,
+			},
+			["pyright"] = {},
+			["dockerls"] = {},
+			["docker_compose_language_service"] = {
+				filetypes = { "yml", "yaml" },
+				autostart = false,
+			},
 			["lua_ls"] = {
 				settings = {
 					Lua = {
@@ -90,6 +115,20 @@ return {
 			lspconfig[server].setup(vim.tbl_deep_extend("error", {
 				capabilities = capabilities,
 			}, _opts))
+
+			if server == "docker_compose_language_service" then
+				vim.api.nvim_create_autocmd("BufRead", {
+					group = vim.api.nvim_create_augroup("LspDockerCompose", {}),
+					pattern = "*docker-compose*.y[a]\\\\\\{0,1\\}ml",
+					callback = function()
+						local buf = vim.api.nvim_get_current_buf()
+						local clients = vim.lsp.get_active_clients({ bufnr = buf })
+						if vim.tbl_isempty(clients) then
+							vim.cmd("LspStart")
+						end
+					end,
+				})
+			end
 		end
 
 		-- use LspAttach autocommand to only map the following keys after the language server attaches to the current buffer

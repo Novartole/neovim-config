@@ -57,26 +57,7 @@ return {
 					name = "cmdline_history",
 					keyword_length = 3,
 				},
-				{
-					name = "buffer-lines",
-					keyword_length = 4,
-				},
 			},
-		})
-
-		cmp.setup.cmdline(":", {
-			mapping = cmp.mapping.preset.cmdline(),
-			sources = cmp.config.sources({
-				{ name = "async_path" },
-				{
-					name = "cmdline",
-					keyword_length = 3,
-				},
-				{
-					name = "cmdline_history",
-					keyword_length = 4,
-				},
-			}),
 		})
 
 		cmp.setup.filetype("lua", {
@@ -93,9 +74,9 @@ return {
 
 		cmp.setup.filetype("rust", {
 			sources = cmp.config.sources({
-				{ name = "luasnip" },
+				-- { name = "luasnip" },
 				{ name = "nvim_lsp" },
-				{ name = "async_path" },
+				-- { name = "async_path" },
 				{ name = "buffer" },
 				{
 					name = "buffer-lines",
@@ -105,7 +86,7 @@ return {
 		})
 
 		vim.api.nvim_create_autocmd("BufRead", {
-			group = vim.api.nvim_create_augroup("CmpSourceCargo", { clear = true }),
+			group = vim.api.nvim_create_augroup("CmpSourceCargo", {}),
 			pattern = "Cargo.toml",
 			callback = function()
 				cmp.setup.buffer({
@@ -149,6 +130,35 @@ return {
 		end
 
 		return {
+			window = {
+				completion = {
+					border = {
+						{ "╭", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ "╮", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ "╯", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ "╰", "FloatBorder" },
+						{ " ", "FloatBorder" },
+					},
+					col_offset = 2,
+					side_padding = 2,
+					scrollbar = false,
+				},
+				documentation = {
+					border = {
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+						{ " ", "FloatBorder" },
+					},
+				},
+			},
 			sources = cmp.config.sources({
 				{ name = "luasnip" },
 				{ name = "nvim_lsp" },

@@ -11,7 +11,7 @@ return {
 			desc = "Move the cursor to the next closest references",
 		},
 		{
-			"[i]",
+			"[i",
 			function()
 				require("illuminate").goto_prev_reference(true)
 			end,

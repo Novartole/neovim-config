@@ -6,6 +6,28 @@ return {
 	},
 	event = "VeryLazy",
 	opts = {
+		cmdline = {
+			format = {
+				cmdline = {
+					conceal = false,
+				},
+				search_down = {
+					icon = "⌄",
+				},
+				search_up = {
+					icon = "⌃",
+				},
+				filter = {
+					conceal = false,
+				},
+				help = {
+					conceal = false,
+				},
+				lua = {
+					conceal = false,
+				},
+			},
+		},
 		lsp = {
 			-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 			override = {
@@ -14,7 +36,6 @@ return {
 				["cmp.entry.get_documentation"] = true,
 			},
 			hover = {
-				enabled = true,
 				opts = {
 					border = {
 						style = {
@@ -27,13 +48,12 @@ return {
 							{ "╰", "FloatBorder" },
 							{ " ", "FloatBorder" },
 						},
-						padding = { 0, 0 },
+						padding = { 0, 2 },
 					},
 					position = {
 						row = 2,
 						col = 2,
 					},
-					scrollbar = false,
 				},
 			},
 		},
@@ -49,9 +69,15 @@ return {
 				},
 				view = "mini",
 			},
+			{
+				filter = {
+					event = "cmdline",
+					find = "^.*:%d?,?%d?s/",
+				},
+				view = "cmdline",
+			},
 		},
 		presets = {
-			bottom_search = true,
 			command_palette = true,
 			long_message_to_split = true,
 		},

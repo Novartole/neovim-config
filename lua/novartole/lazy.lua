@@ -16,9 +16,7 @@ require("lazy").setup({
 }, {
 	ui = {
 		border = "rounded",
-	},
-	install = {
-		colorscheme = { "nightfly" },
+		backdrop = 100,
 	},
 	checker = {
 		enabled = true,

@@ -2,47 +2,28 @@ return {
 	"hrsh7th/nvim-cmp",
 	event = { "InsertEnter", "CmdlineEnter" },
 	dependencies = {
-		-- snippets
-		--
-		"saadparwaiz1/cmp_luasnip", -- luasnip completion source, name = "luasnip"
-
-		-- buffer / Vim-builtin functionality
-		--
-		"hrsh7th/cmp-buffer", -- source for text in buffer, name = "buffer"
-		"amarakon/nvim-cmp-buffer-lines", -- source for all the lines in the current buffer, name = "buffer-lines"
-
-		-- LSP
-		--
-		"hrsh7th/cmp-nvim-lsp", -- source for neovim's built-in language server client, name = "nvim_lsp"
-		-- source for displaying function signatures with the current parameter emphasized,
-		-- name = "nvim_lsp_signature_help"
-		"hrsh7th/cmp-nvim-lsp-signature-help",
-
-		-- filesystem paths
-		--
-		"FelipeLema/cmp-async-path", -- source for filesystem paths with async processing, name = "async_path"
-
-		-- commmand line
-		--
-		"hrsh7th/cmp-cmdline", -- source for vim's cmdline, name = "cmdline"
-		"dmitmel/cmp-cmdline-history", -- source for from command-line histories, name = "cmdline_history"
-
-		-- dependencies
-		--
-		-- "Saecki/crates.nvim", -- source for Cargo.toml (rust), name = "crates"
-
-		-- miscellaneous
-		--
-		"hrsh7th/cmp-nvim-lua", -- source for neovim Lua API, name = "nvim_lua"
-
-		-- engines
-		--
-		"L3MON4D3/LuaSnip", -- snippet engine
-		"rafamadriz/friendly-snippets", -- useful snippets
-
-		-- apperance
-		--
-		"onsails/lspkind.nvim", -- vs-code like pictograms
+		-- engine
+		"L3MON4D3/LuaSnip",
+		-- source for neovim's built-in LSP
+		-- name = "nvim_lsp"
+		"hrsh7th/cmp-nvim-lsp",
+		-- source for text in buffer
+		-- name = "buffer"
+		"hrsh7th/cmp-buffer",
+		-- source for all the lines in the current buffer
+		-- name = "buffer-lines"
+		"amarakon/nvim-cmp-buffer-lines",
+		-- source for filesystem paths with async processing
+		-- name = "async_path"
+		"FelipeLema/cmp-async-path",
+		-- source for from command-line histories
+		-- name = "cmdline_history"
+		"dmitmel/cmp-cmdline-history",
+		-- source for Neovim Lua API such vim.lsp.*
+		-- name = "nvim_lua"
+		"hrsh7th/cmp-nvim-lua",
+		-- vs-code like pictograms
+		"onsails/lspkind.nvim",
 	},
 	config = function(_, opts)
 		local cmp = require("cmp")
@@ -50,37 +31,58 @@ return {
 		cmp.setup(opts)
 
 		cmp.setup.cmdline({ "/", "?" }, {
+			-- turn on navigation via TAB and S-TAB in Command mode
 			mapping = cmp.mapping.preset.cmdline(),
 			sources = {
-				{ name = "buffer" },
+				{
+					name = "buffer",
+					keyword_length = 2,
+					group_index = 2,
+				},
 				{
 					name = "cmdline_history",
 					keyword_length = 3,
+					group_index = 1,
 				},
 			},
 		})
 
 		cmp.setup.filetype("lua", {
 			sources = cmp.config.sources({
-				{ name = "nvim_lua" },
-				{ name = "luasnip" },
 				{ name = "nvim_lsp" },
-				{ name = "nvim_lsp_signature_help" },
-				{ name = "async_path" },
-				{ name = "buffer" },
-				{ name = "buffer-lines" },
+				{ name = "nvim_lua" },
+				{
+					name = "buffer",
+					keyword_length = 3,
+				},
+				{
+					name = "async_path",
+					trigger_characters = { "/" },
+				},
 			}),
 		})
 
 		cmp.setup.filetype("rust", {
 			sources = cmp.config.sources({
-				-- { name = "luasnip" },
-				{ name = "nvim_lsp" },
-				-- { name = "async_path" },
-				{ name = "buffer" },
+				{
+					name = "nvim_lsp",
+					keyword_length = 2,
+					group_index = 1,
+				},
+				{
+					name = "buffer",
+					keyword_length = 3,
+					group_index = 1,
+				},
 				{
 					name = "buffer-lines",
 					keyword_length = 4,
+					group_index = 2,
+				},
+				{
+					name = "async_path",
+					trigger_characters = { "/" },
+					group_index = 1,
 				},
 			}),
 		})
@@ -91,26 +93,15 @@ return {
 			callback = function()
 				cmp.setup.buffer({
 					sources = {
-						{
-							name = "crates",
-							group_index = 1,
-						},
+						{ name = "crates" },
+						{ name = "nvim_lsp" },
 						{
 							name = "async_path",
-							group_index = 1,
+							trigger_characters = { "/" },
 						},
 						{
 							name = "buffer",
-							group_index = 1,
-						},
-						{
-							name = "buffer-lines",
-							group_index = 1,
-							keyword_length = 4,
-						},
-						{
-							name = "nvim_lsp",
-							group_index = 2,
+							keyword_length = 3,
 						},
 					},
 				})
@@ -121,8 +112,7 @@ return {
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 
-		require("luasnip.loaders.from_vscode").lazy_load() -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
-
+		-- needs for selection on TAB and S-TAB
 		local has_words_before = function()
 			unpack = unpack or table.unpack
 			local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -130,6 +120,38 @@ return {
 		end
 
 		return {
+			snippet = {
+				-- required option
+				expand = function(args)
+					luasnip.lsp_expand(args.body)
+				end,
+			},
+			-- use these sources if no match among explicit configurations
+			sources = cmp.config.sources({
+				{
+					name = "nvim_lsp",
+					keyword_length = 2,
+				},
+				{
+					name = "buffer",
+					keyword_length = 3,
+				},
+				{
+					name = "async_path",
+					trigger_characters = { "/" },
+				},
+			}),
+			completion = {
+				completeopt = "menu,menuone,preview,noselect,noinsert",
+			},
+			-- configure lspkind for vs-code like pictograms in completion menu
+			formatting = {
+				format = require("lspkind").cmp_format({
+					mode = "symbol",
+					maxwidth = 50,
+					ellipsis_char = "...",
+				}),
+			},
 			window = {
 				completion = {
 					border = {
@@ -159,30 +181,6 @@ return {
 					},
 				},
 			},
-			sources = cmp.config.sources({
-				{ name = "luasnip" },
-				{ name = "nvim_lsp" },
-				{ name = "nvim_lsp_signature_help" },
-				{ name = "async_path" },
-				{ name = "buffer" },
-				{ name = "buffer-lines" },
-			}),
-			completion = {
-				completeopt = "menu,menuone,preview,noselect,noinsert",
-			},
-			-- configure how nvim-cmp interacts with snippet engine
-			snippet = {
-				expand = function(args)
-					luasnip.lsp_expand(args.body)
-				end,
-			},
-			-- configure lspkind for vs-code like pictograms in completion menu
-			formatting = {
-				format = require("lspkind").cmp_format({
-					maxwidth = 50,
-					ellipsis_char = "...",
-				}),
-			},
 			-- `i` = insert mode, `c` = command mode, `s` = select mode
 			mapping = {
 				["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
@@ -194,6 +192,7 @@ return {
 				["<CR>"] = cmp.mapping.confirm({ select = false }),
 				["<C-c>"] = cmp.mapping.abort(),
 
+				-- move next on TAB
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
@@ -206,6 +205,7 @@ return {
 					end
 				end, { "i", "s" }),
 
+				-- move back on S-TAB
 				["<S-Tab>"] = cmp.mapping(function(fallback) -- shift + tab
 					if cmp.visible() then
 						cmp.select_prev_item()

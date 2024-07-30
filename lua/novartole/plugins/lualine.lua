@@ -3,13 +3,19 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	opts = function()
 		local lazy_status = require("lazy.status")
-
 		local MAX_BRANCH_NAME_LEN = 10
 		local branch_name = ""
 
 		local ft_is_not_nvimtree = function()
 			return "NvimTree" ~= vim.bo.filetype
 		end
+
+		vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
+		vim.api.nvim_create_autocmd("User", {
+			group = "lualine_augroup",
+			pattern = "LspProgressStatusUpdated",
+			callback = require("lualine").refresh,
+		})
 
 		return {
 			options = {
@@ -47,6 +53,10 @@ return {
 					},
 				},
 				lualine_x = {
+					function()
+						return require("lsp-progress").progress()
+					end,
+
 					{
 						"diagnostics",
 						sources = { "nvim_diagnostic", "nvim_lsp" },

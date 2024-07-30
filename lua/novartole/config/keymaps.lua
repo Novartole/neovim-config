@@ -1,18 +1,18 @@
-vim.g.mapleader = " " -- set <leader>
-
 local keymap = vim.keymap
 local cmd = vim.cmd
+
+vim.g.mapleader = " " -- set <leader>
 
 keymap.set("n", "x", '"_x', { desc = "Don't copy x'ed symbol into copy/paste buffer" })
 keymap.set("n", "J", "mzJ`z", { desc = "Keep cursor in place after J in v mode" })
 keymap.set("x", "<leader>p", [["_dP]], { desc = "Don't save replaced block to paste the original one" })
+keymap.set("n", "<leader>ww", ":se wrap!<CR>", { desc = "Toggle wrapping", silent = true })
 keymap.set(
 	"n",
 	"<leader>s",
 	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-	{ desc = "start substitute a word under cursor" }
+	{ desc = "Start substitute a word under cursor" }
 )
-keymap.set("n", "<leader>ww", ":se wrap!<CR>", { desc = "Toggle wrapping", silent = true })
 
 -- window splitting
 --

@@ -4,18 +4,16 @@ return {
 		{
 			"<leader>t",
 			function()
-				local cmd = vim.cmd
-				cmd.split()
+				vim.cmd.split()
 				require("harpoon.term").gotoTerminal(1)
-				cmd.startinsert()
+				vim.cmd.startinsert()
 			end,
 			{ desc = "Open terminal using Harpoon in background (in Terminal mode)" },
 		},
 		{
 			"<leader>T",
 			function()
-				local cmd = vim.cmd
-				cmd.split()
+				vim.cmd.split()
 				require("harpoon.term").gotoTerminal(1)
 			end,
 			{ desc = "Open terminal using Harpoon in background (in Normal mode)" },
@@ -29,17 +27,17 @@ return {
 		},
 	},
 	config = function(_, opts)
-		require("harpoon").setup(opts)
+		local harpoon = require("harpoon")
 
-		local cmd = vim.cmd
+		harpoon.setup(opts)
 
 		vim.keymap.set("t", "<C-x>", function()
-			cmd.stopinsert()
-			cmd.close()
+			vim.cmd.stopinsert()
+			vim.cmd.close()
 		end, { desc = "Close terminal from Terminal mode" })
 
 		vim.keymap.set("n", "<C-x>", function()
-			cmd.close()
+			vim.cmd.close()
 		end, { desc = "Close terminal from Normal mode" })
 	end,
 }

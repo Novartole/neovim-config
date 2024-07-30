@@ -10,7 +10,8 @@ return {
 	opts = {
 		tools = {
 			hover_actions = {
-				replace_builtin_hover = false, -- keep build-in style
+				-- keep build-in style because the view is set up in Noice
+				replace_builtin_hover = false,
 			},
 			float_win_config = {
 				border = {
@@ -34,6 +35,15 @@ return {
 			},
 		},
 		server = {
+			default_settings = {
+				["rust-analyzer"] = {
+					completion = {
+						postfix = {
+							enable = true, -- no need of default snippets
+						},
+					},
+				},
+			},
 			on_attach = function(client, bufnr)
 				require("lsp-inlayhints").on_attach(client, bufnr) -- turn on inlayhints
 
@@ -90,9 +100,7 @@ return {
 				end
 
 				local bufnr, winnr = open_floating_preview(contents, syntax, _opts)
-
 				vim.api.nvim_set_current_win(winnr)
-
 				return bufnr, winnr
 			end
 

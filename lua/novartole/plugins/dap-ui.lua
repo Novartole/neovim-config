@@ -27,10 +27,9 @@ return {
 	},
 	config = function(_, opts)
 		local dapui = require("dapui")
+		local dap = require("dap")
 
 		dapui.setup(opts)
-
-		local dap = require("dap")
 
 		-- open and close windows automatically
 		--

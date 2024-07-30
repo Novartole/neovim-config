@@ -1,5 +1,7 @@
 local opt = vim.opt
 
+vim.opt.vb = true -- never ever make terminal beep
+
 -- appearance
 --
 opt.background = "dark" -- set background

@@ -3,10 +3,13 @@ return {
 	event = { "BufReadPre Cargo.toml" },
 	dependencies = { "nvim-lua/plenary.nvim" },
 	opts = {
-		src = {
+		completion = {
 			cmp = {
-				enabled = true, -- it's safe - no need cmp in deps
+				enabled = true,
 			},
+		},
+		popup = {
+			autofocus = true,
 		},
 	},
 }

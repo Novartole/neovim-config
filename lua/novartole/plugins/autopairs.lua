@@ -1,25 +1,21 @@
 return {
 	"windwp/nvim-autopairs",
 	event = "InsertEnter",
-	dependencies = {
-		"hrsh7th/nvim-cmp",
-		"nvim-treesitter/nvim-treesitter",
-	},
-	opts = {
-		check_ts = true, -- enable treesitter
-	},
 	config = function(_, opts)
-		local autopairs = require("nvim-autopairs")
-
-		autopairs.setup(opts)
-
-		-- add a custom rule for closures of Rust
+		local cond = require("nvim-autopairs.conds")
+		local npairs = require("nvim-autopairs")
 		local Rule = require("nvim-autopairs.rule")
-		autopairs.add_rule(Rule("|", "|", "rust"):with_move(function()
-			return true
-		end))
 
-		-- make autopairs and completion work together
-		require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
+		npairs.setup(opts)
+
+		-- Rust closure with no args, e.g. std::thread::spawn(|| (cursor here; note a space right before the cursor)
+		for _, prefix_empty in pairs({ "spawn(", "spawn(move ", ".ok_or_else(", ".map_or_else(" }) do
+			npairs.add_rule(Rule(prefix_empty .. "|", "| ", "rust"):with_pair(cond.done()):set_end_pair_length(0))
+		end
+
+		-- Rust closure with arg(s), e.g. let f = |(cursor here)|
+		for _, prefix_not_empty in pairs({ "(", "(move ", "= ", "= move ", ", " }) do
+			npairs.add_rule(Rule(prefix_not_empty .. "|", "|", "rust"):with_pair(cond.done()))
+		end
 	end,
 }

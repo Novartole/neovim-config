@@ -29,6 +29,9 @@ return {
 			},
 		},
 		lsp = {
+			progress = {
+				enabled = false,
+			},
 			-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 			override = {
 				["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -36,6 +39,27 @@ return {
 				["cmp.entry.get_documentation"] = true,
 			},
 			hover = {
+				opts = {
+					border = {
+						style = {
+							{ "╭", "FloatBorder" },
+							{ " ", "FloatBorder" },
+							{ "╮", "FloatBorder" },
+							{ " ", "FloatBorder" },
+							{ "╯", "FloatBorder" },
+							{ " ", "FloatBorder" },
+							{ "╰", "FloatBorder" },
+							{ " ", "FloatBorder" },
+						},
+						padding = { 0, 2 },
+					},
+					position = {
+						row = 2,
+						col = 2,
+					},
+				},
+			},
+			signature = {
 				opts = {
 					border = {
 						style = {

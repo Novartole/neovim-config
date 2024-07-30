@@ -9,6 +9,24 @@ return {
 	},
 	opts = {
 		servers = {
+			["gopls"] = {
+				settings = {
+					["gopls"] = {
+						hints = {
+							assignVariableTypes = true,
+							compositeLiteralFields = true,
+							compositeLiteralTypes = true,
+							constantValues = true,
+							functionTypeParameters = true,
+							parameterNames = true,
+							rangeVariableTypes = true,
+						},
+					},
+				},
+				on_attach = function(client, bufnr)
+					require("lsp-inlayhints").on_attach(client, bufnr)
+				end,
+			},
 			["clangd"] = {},
 			["tsserver"] = {
 				settings = {
@@ -38,7 +56,7 @@ return {
 				settings = {
 					Lua = {
 						diagnostics = {
-							globals = { "vim" }, -- make the language server recognize "vim" global
+							globals = { "vim" }, -- make the language server recognize "vim" globaly
 						},
 					},
 				},

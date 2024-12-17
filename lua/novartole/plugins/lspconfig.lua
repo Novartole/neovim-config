@@ -28,7 +28,7 @@ return {
 				end,
 			},
 			["clangd"] = {},
-			["tsserver"] = {
+			["ts_ls"] = {
 				settings = {
 					typescript = {
 						inlayHints = {
